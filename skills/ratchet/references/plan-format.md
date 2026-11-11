@@ -97,7 +97,9 @@ If the search found none, write what was searched and how.
 | Reference | `python3 legacy/tool.py < cases/x.in` | one JSON line | yes |
 | Live check | `scripts/live-check.sh` | `0 differences` | not run (needs executor worktree) |
 
-Only commands from this repo, each one run during recon unless marked.
+Only commands from this repo, each one run during recon unless marked. Say
+which shell they assume ("bash; uses process substitution"): executors may run
+in another shell, where things like `PIPESTATUS` behave differently.
 
 ## Scope
 
@@ -121,6 +123,15 @@ reason.
 - No push, no PR, unless the operator said so.
 
 ## Steps
+
+### Step 0: Branch
+
+`git switch -c ratchet/NNN-slug` (from the branch named under Git).
+
+**Check:** `git branch --show-current` → `ratchet/NNN-slug`
+
+Make this a step, not only a line under Git: executors read the Git section
+once and then work past it.
 
 ### Step 1: <imperative>
 

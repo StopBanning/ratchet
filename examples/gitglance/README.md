@@ -10,6 +10,8 @@ tier working on one plan series.
 - `plans/`: the index (with Built / Checked / Live marks) and plans 001 and 002.
 - `run-log.md`: a trial execution of both plans, the review, and two plan bugs
   that only showed up when the plans were executed.
+- `model-run.md`: both plans executed by Claude Haiku, each in a fresh
+  subagent, and the review of what it did.
 
 ## The setup
 

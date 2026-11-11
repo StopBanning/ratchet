@@ -1,7 +1,9 @@
 # Plans
 
 Written by the ratchet skill on 2026-11-11 at `26c40fa`. Run in order.
-Status for 001 and 002 is from the trial execution in `../run-log.md`.
+Status for 001 and 002 is from the trial execution in `../run-log.md`. Both
+plans were then executed by Claude Haiku and approved on review; see
+`../model-run.md`.
 
 ## Status
 

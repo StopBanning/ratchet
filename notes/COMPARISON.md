@@ -220,7 +220,13 @@ was never in the repo.
   code before the change or a written delta; where neither fits, the plan
   says its criteria are self-referential, and the gap between the two skills
   shrinks to pins, tiers, routing and the cold read.
-- **Not tested:** real model executors (cheap models driven by each plan),
-  a blind run of either skill, repos without a reference, the fallbacks for
+- **Real executors, partly.** Claude Haiku executed this skill's plans 001
+  and 002 from the plan text alone. It made no STOPs, every criterion held on
+  review, and a fresh input built by the reviewer matched the reference (see
+  `examples/gitglance/model-run.md`). That covers the honest path only. No
+  model has been run on improve's plans, and no model has been put in a
+  position to game either.
+- **Not tested:** a real model executor on improve's plans, a model that is
+  tempted to game, a blind run of either skill, repos without a reference, the fallbacks for
   them, the `execute`, `reconcile` and `--issues` flows end to end, and any
   host other than Claude Code.

@@ -78,7 +78,10 @@ the executors were scripted, not models.
 [examples/gitglance/](examples/gitglance/) is the worked example: a findings
 table with routes, two full plans, and a trial execution in which the
 not-yet list goes 7 → 3. The trial run and a second review turned up three
-problems in the plans themselves, now fixed and logged in each plan.
+problems in the plans themselves, now fixed and logged in each plan. Claude
+Haiku then executed both plans from the plan text alone, with no STOPs, and
+every criterion held on review
+([model-run.md](examples/gitglance/model-run.md)).
 
 ## Install
 
