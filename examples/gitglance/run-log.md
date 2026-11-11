@@ -20,11 +20,12 @@ STEPS:
                            reverted; git status clean; pass 23
   4 live                 → record-cases: "recorded 16 cases with git version 2.54.0 (Apple Git-157)", git diff --exit-code: 0
                            live-check: "cli: main +2 ~1 ?1", "live: 1 difference", exit 1 (expected before 002)
+                           (re-run 19:19Z after the scenario gained an R87 rename; same result)
                                                                          (commit 345fa70 = judge commit)
 NOT-YET: before = after = conflict detached modified-spaces quoted-nonascii rename-spaces rename-staged rename-then-modified
 EVIDENCE: 23 pass [checked]; list exact [checked]; expected fresh [checked]; frozen [checked];
           independent loop = 7 names [checked]; recordings = real git 2.54.0 on 2026-11-11 [live];
-          live-check run 2026-11-11T14:56Z, 1 difference, the rename family [live]
+          live-check run 2026-11-11T19:19Z, 1 difference, the rename family [live]
 FILES CHANGED: scripts/gen-expected.sh scripts/live-check.sh test/expected/*.json test/not-yet.txt test/parity.test.js
 NOTES: none
 ```
@@ -33,11 +34,11 @@ Live check output, before plan 002 (the port's bug on fresh real git output):
 
 ```
 git: git version 2.54.0 (Apple Git-157)
-date: 2026-11-11T14:56Z
+date: 2026-11-11T19:19Z
 cli: main +2 ~1 ?1
 live: 1 difference
 reference: {... "paths": ["keep me.txt", "new.txt", "now spaced.txt", "untracked.txt"], "renamed": 2, "staged": 0, ...}
-port:      {... "paths": ["R100", "R100", "keep", "untracked.txt"], "renamed": 0, "staged": 2, ...}
+port:      {... "paths": ["R100", "R87", "keep", "untracked.txt"], "renamed": 0, "staged": 2, ...}
 ```
 
 Review: all criteria re-run and held. **APPROVE.**
@@ -58,7 +59,7 @@ STEPS:
 NOT-YET: before = 7 names; after = conflict detached quoted-nonascii
 EVIDENCE: 26 pass [checked]; list exact [checked]; loop = 3 names [checked]; expected fresh [checked];
           frozen since 345fa70 [checked]; revert fail 8 [checked]; pin assertion gone [checked];
-          live-check 2026-11-11T14:57Z, git 2.54.0, 0 differences [live]
+          live-check 2026-11-11T19:19Z, git 2.54.0, 0 differences, R87 rename included [live]
 FILES CHANGED: src/parse.js test/not-yet.txt test/parse.test.js
 NOTES: two checks in the plan as first written could not pass; see "Plan bugs".
 ```
@@ -84,6 +85,18 @@ pass as written is the advisor's error, not the executor's.
 
 Review after correction: all nine criteria re-run and held. **APPROVE.**
 Not-yet 7 → 3.
+
+## Second review, same day
+
+A second review by a different model found that the live scenario only
+repeated shapes the recorded cases already had: every rename in it, as in the
+recordings, was scored `R100`. A fix fitted to the recordings would have
+passed it. The live script in plan 001 now edits and stages one renamed file,
+which real git reports as `R87`. Both plans' checks were re-run through
+`notes/comparison/reproduce.sh` with the new script (the "advisor, honest"
+block in `notes/comparison/output.txt`): all eight pass. The same script's
+"overfit" executor shows what the change buys: its fix passes every `checked`
+criterion and fails only the live check.
 
 ## Cleanup
 

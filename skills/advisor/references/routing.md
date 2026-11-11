@@ -39,7 +39,8 @@ Then sanity-check with the signals below.
 - The probe is safe and cheap: read-only calls, a sandbox, a scratch repo.
 
 A probe plan's only deliverable is cases: a recording script checked into the
-repo, run twice to show it is stable, and the recordings. No source changes.
+repo, run twice to show it is stable, and the recordings, with credentials
+and personal data stripped by the script. No source changes.
 Once the cases exist, the follow-up is usually an ordinary PLAN with a
 ratchet. Probes turn integration guesswork into plannable work.
 

@@ -212,7 +212,8 @@ rewritten pin. After the restore, `git status --porcelain` prints nothing and
 
 **Check:** `scripts/live-check.sh` → `cli: main ~1 R2 ?1`,
 `live: 0 differences`, exit 0. Put the full output (git version and date
-included) in your report.
+included) in your report. The script feeds the port a rename line no recorded
+case has (score `R87`), so it also shows the fix is not tied to the recordings.
 
 ## Tests
 
@@ -263,4 +264,6 @@ included) in your report.
   each pushed path in `unquote`.
 - Copies (`C` in the X column of a `2` line) take the same branch. No case
   covers them; if one is recorded, it joins the parity set automatically.
-- Reviewer: confirm the rename path is split on the tab, not on a space.
+- Reviewer: confirm the rename path is split on the tab, not on a space, and
+  that nothing in the new branch depends on a value only the recorded cases
+  share (every recorded rename has score `R100`).

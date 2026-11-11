@@ -207,17 +207,21 @@ Create `scripts/live-check.sh`, executable:
 ```bash
 #!/usr/bin/env bash
 # Live check: run the port on fresh output from real git and compare it with
-# the reference. Prints the git version, the date, the CLI's own summary line,
-# and the number of differences. Exit 1 on any difference.
+# the reference. The scenario includes input no recorded case has (a rename
+# git scores below 100), so this is also a held-out check. Prints the git
+# version, the date, the CLI's own summary line, and the number of differences.
+# Exit 1 on any difference.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 W="$(mktemp -d)"; trap 'rm -rf "$W"' EXIT
 export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
 export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@example.com GIT_COMMITTER_NAME=t GIT_COMMITTER_EMAIL=t@example.com
 mkdir "$W/repo"; cd "$W/repo"; git init -q -b main
-printf 'a\n' > a.txt; printf 's\n' > 'has space.txt'; printf 'x\n' > old.txt; printf 'k\n' > 'keep me.txt'
+printf 'a\n' > a.txt; printf 's\n' > 'has space.txt'; printf 'k\n' > 'keep me.txt'
+printf '%s\n' one two three four five six seven eight nine ten > old.txt
 git add .; git commit -qm init
-git mv old.txt new.txt; git mv 'has space.txt' 'now spaced.txt'
+git mv old.txt new.txt; printf 'eleven\n' >> new.txt; git add new.txt   # scored R87, not R100
+git mv 'has space.txt' 'now spaced.txt'
 printf 'b\n' >> 'keep me.txt'; printf 'u\n' > untracked.txt
 git status --porcelain=v2 --branch > "$W/status.txt"
 norm='import json,sys; print(json.dumps(json.load(sys.stdin), sort_keys=True))'
@@ -229,6 +233,11 @@ got="$(node "$ROOT/src/cli.js" --json < "$W/status.txt" | python3 -c "$norm")"
 if [ "$ref" = "$got" ]; then echo "live: 0 differences"; else
   echo "live: 1 difference"; echo "reference: $ref"; echo "port:      $got"; exit 1; fi
 ```
+
+The scenario is deliberately not a copy of the recorded cases. Every recorded
+rename has similarity score `R100`; here one renamed file is edited and
+staged, so git reports `R87`. A fix that only works for the recorded inputs
+fails this check.
 
 Then re-record the cases from real git and confirm they did not change:
 `scripts/record-cases.sh && git diff --exit-code legacy/cases/`.
@@ -274,6 +283,9 @@ check that nothing it created has changed since.
 
 ## Cold read
 
+- 2026-11-11, second review (a different model): the live scenario only
+  repeated shapes the recorded cases already had, so it could not catch a fix
+  overfitted to them. It now includes a rename scored `R87`.
 - 2026-11-11, dry run (the advisor executed 001 and 002 in a scratch
   worktree before publishing): plan 002's frozen check compared against
   this plan's step 2 commit, but `scripts/live-check.sh` is created in step 4,

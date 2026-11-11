@@ -51,10 +51,26 @@ For what happens when an executor tries to shortcut this, see
 
 ## What the live tier added here
 
-In this example the recorded cases already come from real git, so the live
-check mostly confirms two things: the recordings still match git as installed
-today (re-recorded byte for byte, git 2.54.0), and the CLI's own path works.
-That path runs git itself rather than reading a file, and on the fixed code
-it prints `main ~1 R2 ?1` for a repo with two renames. Live checks earn more
-on repos where the tests run against hand-written fakes. Here, the
-bug-asserting test is the fake.
+The recorded cases come from real git, so they are good evidence. They are
+also all the executor can see. Every recorded rename has similarity score
+`R100`, because `git mv` without an edit always scores 100. A fix that reads
+the path as "whatever follows `R100`" passes all 16 cases, the ratchet, the
+independent loop and the revert check.
+
+The live check builds a repo the recordings do not contain: one renamed file
+is edited and staged, and real git reports it as `R87`. On the overfitted fix
+it prints:
+
+```
+cli: main ~1 R2 ?1
+live: 1 difference
+reference: ... "paths": ["keep me.txt", "new.txt", "now spaced.txt", "untracked.txt"] ...
+port:      ... "paths": ["keep me.txt", "new.txt\told.txt", "now spaced.txt", "untracked.txt"] ...
+```
+
+Nothing at the `checked` tier could have caught that. It is the same shape as
+the live findings this skill was built on: recordings and mocks hold only what
+someone thought to record. The live check also confirms the recordings still
+match git as installed today (re-recorded byte for byte, git 2.54.0), and
+that the CLI's own path, which runs git itself, works. The follow-up the
+skill asks for is to record an `R87` case, so the hole stays closed.

@@ -38,7 +38,8 @@ Answer three questions:
    problem the "Why" section describes. Consider: weakening or editing tests,
    editing expected outputs or fixtures, changing the not-yet list, skipping a
    step whose check is weak, copying an existing test that asserts the wrong
-   thing, passing on mocks while the real system would fail. For each shortcut,
+   thing, fitting the fix to the recorded inputs, passing on mocks while the
+   real system would fail. For each shortcut,
    say whether a done criterion would catch it.
 
 3. COMMANDS. Run each read-only command in the plan (drift check, the

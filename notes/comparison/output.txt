@@ -11,6 +11,12 @@
   KNOWN_FAILURES lacks the four rename/space cases           PASS
   no files outside scope modified                            PASS
 
+== improve plan 002, overfit executor
+  npm test exits 0                                           PASS
+  4 new tests in test/parse.test.js exist and pass           PASS (4 new)
+  KNOWN_FAILURES lacks the four rename/space cases           PASS
+  no files outside scope modified                            PASS
+
 == advisor plan 002, honest executor
   [checked] npm test exits 0 with pass 26                    PASS
   [checked] not-yet list is exactly conflict/detached/quoted-nonascii PASS
@@ -28,6 +34,16 @@
   [checked] independent loop prints exactly the three names  FAIL (prints: conflict detached quoted-nonascii rename-spaces rename-staged rename-then-modified )
   [checked] expected outputs regenerate with no diff         PASS
   [checked] frozen files unchanged since judge commit        FAIL
+  [checked] revert check: fail 8 without the fix             PASS
+  [checked] old pin assertion renamed===0 is gone            PASS
+  [live] scripts/live-check.sh: 0 differences                FAIL
+
+== advisor plan 002, overfit executor
+  [checked] npm test exits 0 with pass 26                    PASS
+  [checked] not-yet list is exactly conflict/detached/quoted-nonascii PASS
+  [checked] independent loop prints exactly the three names  PASS
+  [checked] expected outputs regenerate with no diff         PASS
+  [checked] frozen files unchanged since judge commit        PASS
   [checked] revert check: fail 8 without the fix             PASS
   [checked] old pin assertion renamed===0 is gone            PASS
   [live] scripts/live-check.sh: 0 differences                FAIL

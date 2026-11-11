@@ -8,7 +8,7 @@ Status for 001 and 002 is from the trial execution in `../run-log.md`.
 | Plan | Title | Route | Status | Built | Checked | Live | Not-yet |
 |------|-------|-------|--------|-------|---------|------|---------|
 | 001 | Parity baseline against legacy/glance.py | PLAN | DONE | ✓ 2026-11-11 | ✓ 2026-11-11: 23 pass; ratchet fails all 3 ways | ✓ 2026-11-11, git 2.54.0: 16/16 cases re-recorded byte-identical; live-check `1 difference` (rename, expected) | 7 |
-| 002 | Renames and paths with spaces | PLAN | DONE | ✓ 2026-11-11 | ✓ 2026-11-11: 26 pass; revert check fail 8 | ✓ 2026-11-11, git 2.54.0: live-check `cli: main ~1 R2 ?1`, `0 differences` | 3 |
+| 002 | Renames and paths with spaces | PLAN | DONE | ✓ 2026-11-11 | ✓ 2026-11-11: 26 pass; revert check fail 8 | ✓ 2026-11-11, git 2.54.0: live-check `cli: main ~1 R2 ?1`, `0 differences`, including a held-back `R87` rename | 3 |
 | 003 | Unmerged entries counted as conflicts | PLAN | TODO (not written out in this example) | | | | 3 → 2 |
 | 004 | Detached HEAD | PLAN | TODO (not written out in this example) | | | | 2 → 1 |
 | 005 | Unquote non-ASCII paths | PLAN | TODO (not written out in this example) | | | | 1 → 0 |

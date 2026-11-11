@@ -49,24 +49,36 @@ from TypeScript to Rust with cheaper models doing much of the execution:
    dispatch again. Every finding gets a route: PLAN, PROBE (record the real
    system first, then plan), or DIRECT (the capable model should just do it).
 
-On top of those: every plan gets an adversarial cold read before handoff, not
-only on request. A fresh reader lists where it would have to guess, then
-explains how it would make every done criterion pass without fixing anything.
+On top of those:
+
+- Every plan gets an adversarial cold read before handoff, not only on
+  request. A fresh reader lists where it would have to guess, then explains
+  how it would make every done criterion pass without fixing anything.
+- One input is always kept back. The executor can read every recorded case,
+  so a fix can pass them all and still be wrong. The live check, or the
+  reviewer, runs something the repo never contained.
+- No outside reference? For work that must not change behaviour, the code
+  before the change is the reference. For a bug fix, the plan lists exactly
+  which outputs change and to what; everything else must stay identical.
 
 ## Does it work?
 
 [notes/COMPARISON.md](notes/COMPARISON.md) runs improve and this skill on the
-same small repo, then pushes the same lazy executor diff through each plan.
-Improve's done criteria all passed it. This skill's plan failed it on four
-independent checks, and the ratchet went off before any criterion ran. Both
-accepted an honest diff. The comparison also says plainly what it does not
-show: the repo is synthetic and built to contain these failure shapes, one
-model ran both skills, and the executors were scripted, not models.
+same small repo, then pushes three scripted executor diffs through each plan.
+Both plans accepted the honest one. Improve's done criteria also passed a
+lazy diff (paths still broken, the parity test loosened to hide it) and an
+overfitted one (correct only on the recorded inputs). This skill's plan failed
+the lazy diff on four independent checks, and failed the overfitted one on the
+live check against real git, the only check in either plan that could see it.
+
+The comparison also says plainly what it does not show: the repo is synthetic
+and built to contain these failure shapes, one session ran both skills, and
+the executors were scripted, not models.
 
 [examples/gitglance/](examples/gitglance/) is the worked example: a findings
 table with routes, two full plans, and a trial execution in which the
-not-yet list goes 7 → 3. The trial run also turned up two bugs in the plans
-themselves, now fixed and logged.
+not-yet list goes 7 → 3. The trial run and a second review turned up three
+problems in the plans themselves, now fixed and logged in each plan.
 
 ## Install
 

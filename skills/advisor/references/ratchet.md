@@ -22,8 +22,32 @@ Prefer what is closest to reality. A recording made by hand is not a
 reference; it is a pin (see plan-format.md) until it has been compared with
 a real run.
 
-If nothing qualifies, say so in the finding's Reference column ("none"). The
-plan then falls back to ordinary tests, and its Done criteria section says the
+### When nothing outside the code knows the answer
+
+Most repos are not ports. Before settling for "the tests pass", try to make a
+reference, in this order:
+
+1. **The code before the change.** For work that must not change behaviour (a
+   refactor, a performance fix, a dependency bump, a framework migration), the
+   code at the planned-at commit is the reference. Step 1 records its output
+   on every case, before any edit. The not-yet list starts empty and must end
+   empty.
+2. **A written delta.** For a bug fix, step 1 records today's output on every
+   case. The plan then lists, by hand, each case that must change: the case,
+   the field, the old value, the new value, and why. If the new values are not
+   obvious from a spec or a doc, the user confirms them before the plan is
+   handed over. The executor applies exactly those edits to the expected files
+   before touching the source, and from then on the files are frozen. Every
+   case not named must stay byte-identical. The executor can change neither
+   more nor less than the plan says.
+3. **A property.** When outputs cannot be listed: a round trip (parse, then
+   print, gives the input back), running twice gives the same result, two code
+   paths agree, the output is accepted by a real tool. This constrains shape
+   and not values, so it is weaker, but nobody can satisfy it by editing an
+   expected value.
+
+If none of these fit, write "none" in the finding's Reference column. The plan
+then falls back to ordinary tests, and its Done criteria section says the
 criteria are self-referential.
 
 ## 2. Cases
@@ -40,6 +64,14 @@ can name them one per line.
   prove it.
 - Group cases into families named after the behaviour they exercise
   (`rename-*`, `conflict-*`). Plans fix families, not individual cases.
+- Recordings are committed files. The recorder strips credentials, tokens and
+  personal data (headers, cookies, home paths, e-mail addresses), and the plan
+  tells the executor to read the recordings before committing them. Rule 3 in
+  SKILL.md applies to fixtures as much as to plans.
+- Run the reference twice on every case. Where it disagrees with itself
+  (timestamps, random ids, map ordering), normalise in the generator, or leave
+  the case out and list it as unstable. An unstable case never goes on the
+  not-yet list: it would pass and fail at random.
 
 ## 3. Expected outputs
 
@@ -162,8 +194,32 @@ tampered with or is wrong.
 | Delete or rename a case file | sanity test plus `git diff --exit-code` on the cases folder |
 | Write new unit tests that pass with or without the fix | revert-the-fix check: new tests must fail when the source change is reverted |
 | Model a fix on a hand-written fake that has the wrong format | pins section names the fake; live check runs the real thing |
+| Fit the fix to the recorded inputs, or to something only they share | an input no case file has, run in the live check or at review; reading the diff for values copied from cases |
 
-## 7. When the reference is wrong
+### Keep one input back
+
+The executor can read every case in the repo, so a fix can pass all of them
+and still be wrong: it special-cases a recorded input, or leans on something
+the recordings happen to share. In the worked example every recorded rename
+has similarity score `R100`; a fix keyed on that string passes the whole
+ratchet and breaks on the first real rename that git scores `R87`.
+
+So at least one input stays out of the case folder. The live check should
+build a scenario the recordings do not contain. Where there is no live check,
+the reviewer makes one up at review time and runs the reference and the code
+on it. When a held-back input finds a hole, the code is only half the fix:
+record that input as a new case, so the hole stays closed.
+
+## 7. Other lists that ratchet
+
+The same mechanism works for any burn-down, not only parity: files not yet
+migrated, lint suppressions, skipped tests, files that still have type errors.
+One name per line in a plain file, a test that fails both ways, and done
+criteria that state the exact final content. Prefer a list to a count. "Under
+380 warnings" lets one new warning hide behind one fixed; a list of the files
+that may still have warnings does not.
+
+## 8. When the reference is wrong
 
 References have bugs too. If the plan's work shows the reference disagrees
 with the real system (for example, a live check shows real CLI output the old

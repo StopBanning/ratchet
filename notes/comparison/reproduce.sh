@@ -3,11 +3,15 @@
 #
 # Builds the gitglance fixture twice, lays down each skill's plan-001 baseline
 # (improve: parity test with a skip list; advisor: ratchet), applies the same
-# lazy executor diff for plan 002 to both, then runs each plan's own done
-# criteria and prints which ones catch it. Also runs an honest executor diff
-# through both, to show both plans accept correct work.
+# scripted executor diffs for plan 002 to both, then runs each plan's own done
+# criteria and prints which ones catch what:
+#   honest   correct fix, tests built from real recordings
+#   lazy     models the fix on the existing hand-written test, then loosens
+#            the parity comparison until npm test is green
+#   overfit  a fix that works for every recorded case (all renames there have
+#            score R100) and for nothing else; tests as in honest
 #
-# Usage: reproduce.sh <empty scratch dir>     Needs: git, node, python3.
+# Usage: reproduce.sh <empty scratch dir>     Needs: git, node 20+, python3.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 MAKE="$HERE/../../examples/gitglance/make-repo.sh"
@@ -68,7 +72,7 @@ baseline_advisor() {   # advisor plan 001, code taken verbatim from the plan fil
   git add -A && git commit -qm "test: parity ratchet, live check"
 }
 
-fix_parse() {   # $1 = honest | lazy
+fix_parse() {   # $1 = honest | lazy | overfit
   python3 - "$1" <<'EOF'
 import pathlib, sys
 mode = sys.argv[1]
@@ -82,7 +86,13 @@ old = """    } else if (line.startsWith('1 ') || line.startsWith('2 ')) {
 """
 # The lazy executor models the rename path on the existing hand-written test,
 # whose input separates the two paths with a space: so it takes field 9.
-rename_path = "parts.slice(9).join(' ').split('\\t')[0]" if mode == 'honest' else "parts[9]"
+# The overfit executor reads the path as "whatever follows R100", which is true
+# of every recorded rename and false for real git output in general.
+rename_path = {
+    'honest': "parts.slice(9).join(' ').split('\\t')[0]",
+    'lazy': "parts[9]",
+    'overfit': "(/ R100 ([^\\t]*)\\t/.exec(line) ?? [null, parts[9]])[1]",
+}[mode]
 new = f"""    }} else if (line.startsWith('1 ')) {{
       const parts = line.split(' ');
       const xy = parts[1];
@@ -131,6 +141,8 @@ test('rename path is the new name', () => {
 p.write_text(s)
 EOF
 }
+
+tests_overfit() { tests_honest; }
 
 tests_honest() {   # pin rewritten from a real recording; new tests from real recordings
   python3 - <<'EOF'
@@ -248,4 +260,4 @@ run() {   # $1 = improve|advisor  $2 = honest|lazy
   "criteria_$1"; echo
 }
 
-run improve honest; run improve lazy; run advisor honest; run advisor lazy
+for skill in improve advisor; do for executor in honest lazy overfit; do run "$skill" "$executor"; done; done

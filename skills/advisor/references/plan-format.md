@@ -142,6 +142,13 @@ what to write in the report: date, version of the real system, the command,
 and a one-line summary of what was seen. If the live result disagrees with
 the reference or with the recorded cases, STOP.
 
+- The check must be safe: read-only calls, a sandbox, a test account or a
+  scratch copy. If it needs a credential, name the environment variable, not
+  the value, and say what the executor does without it: report the criterion
+  as "not reached", never guess the result.
+- Give it at least one input the recorded cases do not contain, and say which.
+  That is what shows the fix is not fitted to the recordings.
+
 ## Tests
 
 - New tests: file, names, and what each asserts, written against the
@@ -212,8 +219,12 @@ unless the dependencies say otherwise.
 | 002 | Renames and spaces | PLAN | TODO | | | | 7 → 3 |
 
 - Status: TODO, IN PROGRESS, DONE, BLOCKED (one-line reason), REJECTED (one-line reason).
+  Start a BLOCKED reason with `reality:` when the real system behaved
+  differently from the plan. Two of those for the same work re-route it DIRECT.
 - Built / Checked / Live: a tick and date when reached, with what was seen for
-  Live. A blank is honest; a tick without a date is not allowed.
+  Live. A blank is honest; a tick without a date is not allowed. A plan whose
+  live check could not be run can still be DONE at `checked`, with Live blank
+  and the reason in the Status cell.
 - Not-yet: the list length now, or "now → target" for a pending plan.
 
 ## Do directly (not planned)
@@ -242,6 +253,7 @@ unless the dependencies say otherwise.
 - Are the not-yet lists, before and after, written out in full?
 - Is every pin named with how it changes, or the search recorded?
 - Does each done criterion carry a tier, and is the evidence target honest?
+- Is the live check safe to run, and does it include an input the cases lack?
 - Are the frozen paths in the drift check and in a `git diff --exit-code`?
 - Are the STOP conditions about this plan, not boilerplate?
 - No secret values anywhere.

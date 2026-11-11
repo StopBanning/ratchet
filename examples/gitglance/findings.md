@@ -11,8 +11,11 @@ Run of this skill against `fixture-repo/` rebuilt at commit `26c40fa`
   port reaches parity, the Python version is the source of truth." Runs
   read-only: `python3 legacy/glance.py < <porcelain file>` prints one JSON line.
 - **Cases:** 16 files in `legacy/cases/*.porcelain`, recorded from real git by
-  `scripts/record-cases.sh` with pinned dates and identities. Ran the recorder
-  twice into a temp copy: byte-identical. The Node tests do not use them.
+  `scripts/record-cases.sh` with pinned dates and identities. The recorder
+  writes into the tree, so it was not run during recon; plan 001's step 4
+  re-runs it in the executor's worktree and requires identical bytes. Every
+  recorded rename has similarity score `R100`: no case covers a rename git
+  scores lower. The Node tests do not use the cases.
 - **Reference vs port today** (ran both on all 16 cases): 9 match, 7 differ:
   `conflict`, `detached`, `modified-spaces`, `quoted-nonascii`,
   `rename-spaces`, `rename-staged`, `rename-then-modified`.
@@ -30,7 +33,8 @@ Run of this skill against `fixture-repo/` rebuilt at commit `26c40fa`
   - The other four tests agree with the reference.
 - **Live surface:** the CLI runs real `git status --porcelain=v2 --branch`
   (`src/cli.js:14`). Safe live check: build a throwaway repo in a temp dir. No
-  script does that today.
+  script does that today. The live scenario should include a rename scored
+  below 100, since the cases lack one.
 
 ## Findings
 

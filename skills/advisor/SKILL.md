@@ -39,8 +39,10 @@ what the plan assumed. This skill is built around both:
    check-only tools (`tsc --noEmit`, a linter without `--fix`, a test run that
    writes nothing outside ignored folders), and running a reference read-only
    to see its output are fine. Installs, formatters, builds into tracked
-   paths and commits are not. Exceptions: anything inside an executor's
-   worktree during review, and `gh issue create` under `--issues`.
+   paths and commits are not. If you need to run something that writes (a
+   recorder, a build), do it in a throwaway worktree of your own. Exceptions:
+   anything inside an executor's worktree during review, and
+   `gh issue create` under `--issues`.
 3. **Never write a secret down.** If you find a credential, record its location
    and kind ("AWS key, `deploy/env.sh:4`") and recommend rotating it. The value
    never appears in a finding, a plan, an issue, or a subagent prompt.
@@ -61,7 +63,9 @@ what the plan assumed. This skill is built around both:
 
 - **Reference (oracle):** something whose output is right by definition for
   this work: an older implementation being ported, a spec with worked
-  examples, a real CLI or service, recorded fixtures from one of those.
+  examples, a real CLI or service, recorded fixtures from one of those. When
+  nothing outside the code qualifies, the code as it was before the change,
+  or a written list of exactly what must change, can stand in.
 - **Case:** one input the reference and the code can both be run on.
 - **Not-yet list:** a file naming the cases where the code still differs from
   the reference. It may only shrink.
@@ -86,8 +90,8 @@ Learn the repo before judging it:
   ones so the plans carry commands you have seen work, with their real output.
 - Conventions: naming, error handling, folder layout, test style.
 - Decision and intent docs (`docs/adr/`, product briefs, `PRODUCT.md`,
-  `CONTEXT.md`, `DESIGN.md`). A recorded decision is not a finding, unless the code has
-  drifted from it, in which case the drift is.
+  `CONTEXT.md`, `DESIGN.md`). A recorded decision is not a finding, unless the
+  code has drifted from it, in which case the drift is.
 - `git log` for what is moving and what is frozen.
 
 Then three things most audits skip:
@@ -118,10 +122,10 @@ architecture and debt, dependencies, developer experience, docs, direction.
 On a repo of real size, fan out read-only subagents, one per category or
 cluster (in Claude Code, Explore agents). They do not inherit this skill, so
 each prompt carries: the absolute path to `references/audit.md` and the
-sections to read (always including "Finding format"), what recon learned to
-say where to look and what to skip, the references and pins you found, decisions they must not
-re-report, Rules 3 and 4 copied word for word, and an instruction to return
-findings only. If the host cannot spawn subagents, audit directly in
+sections to read (always including "Finding format"), what recon learned
+about where to look and what to skip, the references and pins you found,
+decisions they must not re-report, Rules 3 and 4 copied word for word, and an
+instruction to return findings only. If the host cannot spawn subagents, audit directly in
 priority order.
 
 Depth: `quick` covers hotspots and returns about six high-confidence findings;
@@ -180,7 +184,9 @@ with a reference.
   contain when done, line for line. "These 4 lines leave the list and none are
   added" is the done criterion that matters. If the repo has no ratchet yet,
   the first step (or a separate first plan) builds it, and it lands with the
-  list exactly matching today's differences, without touching the code under test.
+  list exactly matching today's differences, without touching the code under
+  test. With no outside reference, use the code before the change or a
+  written delta (ratchet.md says how) before falling back to plain tests.
 - **Name the pins.** For every behaviour the plan changes, list the existing
   tests and fixtures that assert the old behaviour, say how each must change,
   and forbid using them as a model for new tests. If a pin is a fake of an
@@ -188,6 +194,14 @@ with a reference.
 - **State the evidence tier** each done criterion reaches. If the plan can
   reach `live`, include the live check as a step with its exact command and
   what to record (date, version, what was seen). If it cannot, say why.
+- **Keep one input back.** The executor can read every case in the repo, so
+  a fix can fit the cases and nothing else. The live check, or the reviewer
+  where there is none, runs at least one input no case file contains.
+- **A live check is safe, or it is not in the plan.** Read-only calls, a
+  sandbox, a test account or a scratch copy only; never a write to
+  production. If the check needs a credential, the plan names the environment
+  variable, never the value. An executor without access reports the criterion
+  as not reached, and the result stays at `checked`.
 - **Freeze the judge.** The reference, its recorded expected outputs, and the
   ratchet test itself are out of scope for every step after the one that
   creates them. Done criteria check that with `git diff --exit-code`.
