@@ -1,0 +1,8 @@
+{
+  "name": "advisor",
+  "description": "Audits a codebase with a capable model, writes plans a cheaper agent can execute, and reviews the result. Done criteria come from a reference (old implementation, spec, real CLI output, recordings) and a not-yet list that may only shrink; every result says whether it was built, checked, or seen live. Read-only on source.",
+  "version": "0.1.0",
+  "author": { "name": "Colin McCarthy" },
+  "license": "MIT",
+  "keywords": ["audit", "planning", "agents", "handoff", "parity", "testing", "code-review"]
+}

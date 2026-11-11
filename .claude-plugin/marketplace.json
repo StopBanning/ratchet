@@ -1,0 +1,6 @@
+{
+  "name": "advisor",
+  "owner": { "name": "Colin McCarthy" },
+  "metadata": { "description": "Marketplace entry for the advisor plugin." },
+  "plugins": [{ "name": "advisor", "source": "./" }]
+}

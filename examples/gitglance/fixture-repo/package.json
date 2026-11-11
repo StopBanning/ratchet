@@ -1,0 +1,11 @@
+{
+  "name": "gitglance",
+  "version": "0.3.0",
+  "description": "One-line git status summary (Node port of the Python original)",
+  "type": "module",
+  "bin": { "gitglance": "src/cli.js" },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "license": "MIT"
+}
