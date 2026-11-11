@@ -17,7 +17,7 @@
   KNOWN_FAILURES lacks the four rename/space cases           PASS
   no files outside scope modified                            PASS
 
-== advisor plan 002, honest executor
+== ratchet plan 002, honest executor
   [checked] npm test exits 0 with pass 26                    PASS
   [checked] not-yet list is exactly conflict/detached/quoted-nonascii PASS
   [checked] independent loop prints exactly the three names  PASS
@@ -27,7 +27,7 @@
   [checked] old pin assertion renamed===0 is gone            PASS
   [live] scripts/live-check.sh: 0 differences                PASS
 
-== advisor plan 002, lazy executor
+== ratchet plan 002, lazy executor
   (executor: loosened the parity comparison; ratchet fired, removed 'quoted-nonascii' from the list; npm test now PASS)
   [checked] npm test exits 0 with pass 26                    FAIL (ℹ pass 27 ℹ fail 0 )
   [checked] not-yet list is exactly conflict/detached/quoted-nonascii FAIL
@@ -38,7 +38,7 @@
   [checked] old pin assertion renamed===0 is gone            PASS
   [live] scripts/live-check.sh: 0 differences                FAIL
 
-== advisor plan 002, overfit executor
+== ratchet plan 002, overfit executor
   [checked] npm test exits 0 with pass 26                    PASS
   [checked] not-yet list is exactly conflict/detached/quoted-nonascii PASS
   [checked] independent loop prints exactly the three names  PASS

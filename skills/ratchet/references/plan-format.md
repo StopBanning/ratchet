@@ -112,7 +112,7 @@ reason.
 
 ## Git
 
-- Branch name: `advisor/NNN-slug` unless the repo has its own pattern.
+- Branch name: `ratchet/NNN-slug` unless the repo has its own pattern.
 - Commit after each step, message in the repo's style (quote one from
   `git log`). The commit that finishes creating the reference tooling (ratchet
   test, list, generator, live script) is the "judge commit"; later frozen
@@ -208,7 +208,7 @@ what was deliberately left out and why.
 ```markdown
 # Plans
 
-Written by the advisor skill on <date> at `<sha>`. Run in the order below
+Written by the ratchet skill on <date> at `<sha>`. Run in the order below
 unless the dependencies say otherwise.
 
 ## Status

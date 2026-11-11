@@ -148,7 +148,7 @@ paths and `unquote` (plan 005), `formatLine`.
 
 ## Git
 
-- Branch `advisor/002-renames-and-spaces` from plan 001's branch.
+- Branch `ratchet/002-renames-and-spaces` from plan 001's branch.
 - One commit per step, `fix: ...` / `test: ...`.
 - No push, no PR.
 

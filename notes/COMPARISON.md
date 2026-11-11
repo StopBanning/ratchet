@@ -1,4 +1,4 @@
-# Comparison: improve and advisor on the same repo
+# Comparison: improve and ratchet on the same repo
 
 **Headline.** Three scripted executors ran against each skill's plan for the
 same fix. Both plans accepted the honest one. Improve's plan also accepted the
@@ -53,7 +53,7 @@ which is to its credit and follows its own rubric ("anything that unblocks
 other findings floats up"). So the difference is not whether a parity test
 exists. It is how the plans are judged.
 
-| | improve | advisor |
+| | improve | ratchet |
 |---|---|---|
 | Findings | 7, all as table rows | 7, plus a Route and a Reference column |
 | CLI exit-code bug (two lines) | row 7, would become a plan if selected | routed DIRECT with a five-line recipe; no plan |
@@ -75,7 +75,7 @@ improve, plan 002:
 - [ ] No files outside the in-scope list are modified (`git status`)
 ```
 
-advisor, plan 002 (abridged):
+ratchet, plan 002 (abridged):
 
 ```
 - [ ] [checked] `diff <(grep -v '^#' test/not-yet.txt) <(printf '%s\n' conflict detached quoted-nonascii)` prints nothing
@@ -101,7 +101,7 @@ improve, plan 002, step 2:
 > Update the existing rename test if it no longer matches the reference
 > behaviour.
 
-advisor, plan 002, Pins:
+ratchet, plan 002, Pins:
 
 > **`test/parse.test.js:33-37`, "rename shows up as a staged change". Change it.**
 > It asserts `staged 1, renamed 0`, which is the bug. Its input is also wrong:
@@ -148,7 +148,7 @@ conditions, then dispatch and review. Ours routed it DIRECT:
 
 This repo has no live-integration work, so the other half of routing (do it
 directly when reality keeps changing the plan) is not exercised here. See
-`skills/advisor/references/routing.md`.
+`skills/ratchet/references/routing.md`.
 
 ### 5. Reading the plan cold
 
@@ -169,9 +169,9 @@ series.
 The same three scripted executors, on each skill's own plan 001 baseline,
 judged by each plan 002's own done criteria (from `output.txt`):
 
-| Done criterion | improve honest | improve lazy | improve overfit | advisor honest | advisor lazy | advisor overfit |
+| Done criterion | improve honest | improve lazy | improve overfit | ratchet honest | ratchet lazy | ratchet overfit |
 |---|---|---|---|---|---|---|
-| tests pass (advisor: with `pass 26`) | PASS | PASS | PASS | PASS | FAIL (27)* | PASS |
+| tests pass (ratchet: with `pass 26`) | PASS | PASS | PASS | PASS | FAIL (27)* | PASS |
 | new tests exist and pass | PASS | PASS | PASS | — | — | — |
 | skip list lacks the 4 cases / not-yet list is exactly 3 names | PASS | PASS | PASS | PASS | **FAIL** | PASS |
 | scope clean | PASS | PASS | PASS | — | — | — |

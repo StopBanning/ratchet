@@ -1,6 +1,6 @@
 {
-  "name": "advisor",
+  "name": "ratchet",
   "owner": { "name": "Colin McCarthy" },
-  "metadata": { "description": "Marketplace entry for the advisor plugin." },
-  "plugins": [{ "name": "advisor", "source": "./" }]
+  "metadata": { "description": "Marketplace entry for the ratchet plugin." },
+  "plugins": [{ "name": "ratchet", "source": "./" }]
 }

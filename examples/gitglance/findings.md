@@ -1,4 +1,4 @@
-# Advisor run: gitglance, findings
+# Ratchet run: gitglance, findings
 
 Run of this skill against `fixture-repo/` rebuilt at commit `26c40fa`
 (`./make-repo.sh <dir>`), 2026-11-11. Effort `standard`, non-interactive.

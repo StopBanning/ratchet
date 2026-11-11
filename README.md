@@ -1,4 +1,4 @@
-# advisor
+# ratchet
 
 An agent skill that audits a codebase with a capable model, writes plans that
 cheaper agents can execute, and then reviews their work. Its done criteria
@@ -6,9 +6,9 @@ are hard to game, because they come from a reference the executor cannot
 edit.
 
 ```
-/advisor                 capable model: recon, audit, route, plan, cold read
+/ratchet                 capable model: recon, audit, route, plan, cold read
 plans/001-....md         self-contained plan: steps, checks, STOPs, not-yet list
-/advisor execute 001     cheaper model executes in a worktree; advisor reviews
+/ratchet execute 001     cheaper model executes in a worktree; advisor reviews
 ```
 
 ## Why another one
@@ -82,43 +82,49 @@ problems in the plans themselves, now fixed and logged in each plan.
 
 ## Install
 
-As a Claude Code plugin, from a local checkout:
+As a Claude Code plugin:
 
 ```
-/plugin marketplace add /path/to/advisor-skill
-/plugin install advisor@advisor
+/plugin marketplace add StopBanning/ratchet
+/plugin install ratchet@ratchet
 ```
 
-Or copy `skills/advisor/` into `~/.claude/skills/` (or your agent's skills
+In any agent that supports Agent Skills:
+
+```bash
+npx skills add StopBanning/ratchet
+```
+
+Or copy `skills/ratchet/` into `~/.claude/skills/` (or your agent's skills
 folder). It follows the [Agent Skills](https://agentskills.io) layout, and
 its output is ordinary markdown that any agent or person can work from.
 
 ## Usage
 
 ```
-/advisor                       recon, audit, route, plan the top findings, cold read
-/advisor quick | deep          audit depth (combines with everything)
-/advisor security              one category (also: perf, tests, ...)
-/advisor branch                only what the current branch changes
-/advisor next                  grounded suggestions for where to take the project
-/advisor parity <reference>    build the ratchet against a reference, plan by family
-/advisor plan <description>    skip the audit, plan one thing
-/advisor review-plan <file>    cold-read and tighten an existing plan
-/advisor execute <plan> [model]  executor in a worktree, then review
-/advisor reconcile             re-verify, refresh drift, flag stale live marks
-/advisor ... --issues          open a GitHub issue per plan too (asks first on public repos)
+/ratchet                       recon, audit, route, plan the top findings, cold read
+/ratchet quick | deep          audit depth (combines with everything)
+/ratchet security              one category (also: perf, tests, ...)
+/ratchet branch                only what the current branch changes
+/ratchet next                  grounded suggestions for where to take the project
+/ratchet parity <reference>    build the ratchet against a reference, plan by family
+/ratchet plan <description>    skip the audit, plan one thing
+/ratchet review-plan <file>    cold-read and tighten an existing plan
+/ratchet execute <plan> [model]  executor in a worktree, then review
+/ratchet reconcile             re-verify, refresh drift, flag stale live marks
+/ratchet ... --issues          open a GitHub issue per plan too (asks first on public repos)
 ```
 
 ## Layout
 
 ```
-skills/advisor/SKILL.md                     the workflow and rules
-skills/advisor/references/audit.md          categories and the finding format
-skills/advisor/references/ratchet.md        references, cases, the ratchet test, anti-gaming checks
-skills/advisor/references/plan-format.md  the plan and index formats
-skills/advisor/references/routing.md        PLAN / PROBE / DIRECT
-skills/advisor/references/cold-read.md      the adversarial cold read
-skills/advisor/references/execute-and-review.md  dispatch, review, reconcile, issues
+skills/ratchet/SKILL.md                     the workflow and rules
+skills/ratchet/references/audit.md          categories and the finding format
+skills/ratchet/references/ratchet.md        references, cases, the ratchet test, anti-gaming checks
+skills/ratchet/references/plan-format.md  the plan and index formats
+skills/ratchet/references/routing.md        PLAN / PROBE / DIRECT
+skills/ratchet/references/cold-read.md      the adversarial cold read
+skills/ratchet/references/execute-and-review.md  dispatch, review, reconcile, issues
 examples/gitglance/                         worked example
 notes/COMPARISON.md                         head-to-head with improve, reproducible
 ```

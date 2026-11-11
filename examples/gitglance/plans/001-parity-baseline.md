@@ -108,7 +108,7 @@ model for anything.
 
 ## Git
 
-- Branch `advisor/001-parity-baseline`.
+- Branch `ratchet/001-parity-baseline`.
 - One commit per step. Message style from `git log`: `port: Node version of
   gitglance (WIP, see README)`, so use `test: ...` here.
 - No push, no PR.

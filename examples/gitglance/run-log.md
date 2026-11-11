@@ -93,7 +93,7 @@ repeated shapes the recorded cases already had: every rename in it, as in the
 recordings, was scored `R100`. A fix fitted to the recordings would have
 passed it. The live script in plan 001 now edits and stages one renamed file,
 which real git reports as `R87`. Both plans' checks were re-run through
-`notes/comparison/reproduce.sh` with the new script (the "advisor, honest"
+`notes/comparison/reproduce.sh` with the new script (the "ratchet, honest"
 block in `notes/comparison/output.txt`): all eight pass. The same script's
 "overfit" executor shows what the change buys: its fix passes every `checked`
 criterion and fails only the live check.

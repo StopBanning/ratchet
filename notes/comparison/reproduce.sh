@@ -2,7 +2,7 @@
 # Reproduce the head-to-head in notes/COMPARISON.md.
 #
 # Builds the gitglance fixture twice, lays down each skill's plan-001 baseline
-# (improve: parity test with a skip list; advisor: ratchet), applies the same
+# (improve: parity test with a skip list; ratchet: a list that fails both ways), applies the same
 # scripted executor diffs for plan 002 to both, then runs each plan's own done
 # criteria and prints which ones catch what:
 #   honest   correct fix, tests built from real recordings
@@ -60,7 +60,7 @@ EOF
   git add -A && git commit -qm "test: add parity test against legacy"
 }
 
-baseline_advisor() {   # advisor plan 001, code taken verbatim from the plan file
+baseline_ratchet() {   # ratchet plan 001, code taken verbatim from the plan file
   local plan="$HERE/../../examples/gitglance/plans/001-parity-baseline.md"
   mkdir -p scripts
   awk '/^### Step 1/{s=1} s&&/^```bash$/{f=1;next} f&&/^```$/{exit} f' "$plan" > scripts/gen-expected.sh
@@ -202,7 +202,7 @@ assert old in s; p.write_text(s.replace(old, new))
 EOF
 }
 
-loosen_advisor() {   # the same move against the advisor's ratchet test
+loosen_ratchet() {   # the same move against the ratchet's ratchet test
   python3 - <<'EOF'
 import pathlib
 p = pathlib.Path('test/parity.test.js'); s = p.read_text()
@@ -224,7 +224,7 @@ criteria_improve() {   # improve plan 002's done criteria, as written
   say "no files outside scope modified" "$([ -z "$extra" ] && echo PASS || echo "FAIL ($extra)")"
 }
 
-criteria_advisor() {   # advisor plan 002's done criteria, as written
+criteria_ratchet() {   # ratchet plan 002's done criteria, as written
   local judge=HEAD~1 base=26c40fa
   local summary; summary=$(npm test 2>&1)
   say "[checked] npm test exits 0 with pass 26" "$(grep -q '^ℹ pass 26$' <<<"$summary" && ok npm test || echo "FAIL ($(grep -E '^ℹ (pass|fail)' <<<"$summary" | tr '\n' ' '))")"
@@ -240,7 +240,7 @@ criteria_advisor() {   # advisor plan 002's done criteria, as written
   say "[live] scripts/live-check.sh: 0 differences" "$(ok scripts/live-check.sh)"
 }
 
-run() {   # $1 = improve|advisor  $2 = honest|lazy
+run() {   # $1 = improve|ratchet  $2 = honest|lazy
   local d="$OUT/$1-$2"
   if [ -e "$d" ]; then echo "$d already exists; pass an empty directory" >&2; exit 1; fi
   "$MAKE" "$d" >/dev/null; cd "$d"
@@ -260,4 +260,4 @@ run() {   # $1 = improve|advisor  $2 = honest|lazy
   "criteria_$1"; echo
 }
 
-for skill in improve advisor; do for executor in honest lazy overfit; do run "$skill" "$executor"; done; done
+for skill in improve ratchet; do for executor in honest lazy overfit; do run "$skill" "$executor"; done; done

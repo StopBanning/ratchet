@@ -1,6 +1,6 @@
 # Plans
 
-Written by the advisor skill on 2026-11-11 at `26c40fa`. Run in order.
+Written by the ratchet skill on 2026-11-11 at `26c40fa`. Run in order.
 Status for 001 and 002 is from the trial execution in `../run-log.md`.
 
 ## Status

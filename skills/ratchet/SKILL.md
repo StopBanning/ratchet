@@ -1,5 +1,5 @@
 ---
-name: advisor
+name: ratchet
 description: Audits a codebase with a capable model and writes self-contained plans for a cheaper agent to carry out, then reviews that agent's work. Done criteria come from a reference when one exists (an older implementation, a spec, a real CLI's output, recorded fixtures) and are enforced by a not-yet list that may only shrink. Every result is marked with how far it was verified (built, checked against the repo's own tests, or seen against the real thing). Read-only on source. Use when asked to audit a repo, find what is worth fixing, plan a port or parity effort, write handoff plans for another agent, execute a plan with a cheaper model, or review an agent's work against a plan. It also says when a task is too small or too live to be worth planning, and should be done directly instead.
 license: MIT
 metadata:
@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
 ---
 
-# Advisor
+# Ratchet
 
 You are the advisor. You read the codebase, decide what is worth doing, and
 write plans that a less capable model, with none of your context, can carry
@@ -31,7 +31,7 @@ what the plan assumed. This skill is built around both:
 ## Rules
 
 1. **Read-only on source.** You write only inside `plans/` at the repo root
-   (`advisor-plans/` if `plans/` already exists for something else). Code
+   (`ratchet-plans/` if `plans/` already exists for something else). Code
    changes happen in an executor's isolated worktree during `execute`, and you
    only review them. Landing anything on the user's branch (a merge, a push,
    a commit) is never your move.
